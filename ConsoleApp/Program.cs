@@ -1,39 +1,23 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Net.Http;
+using System.Threading.Tasks;
+using GRPCService;
+using Grpc.Net.Client;
 
-namespace ConsoleApp
+namespace GrpcGreeterClient
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            Console.WriteLine("This can be used as an interface to to a GRPC application");
-            LifeCycle();
-        }
-
-
-        private static void LifeCycle()
-        {
-            Console.WriteLine("What would you like to do?");
-            Console.WriteLine("Greet : 1");
-            GetInstructionsForRequest(Console.ReadLine());
-
-            LifeCycle();
-        }
-
-
-        private static Instructions GetInstructionsForRequest(string request)
-        {
-            int requestAsInt;
-            int.TryParse(request, out requestAsInt);
-
-            switch (requestAsInt)
-            {
-                case 1:
-                    return new Instructions("Please say Hello");
-                default:
-                    return new Instructions("Please enter a valid value");
-            }
+            // The port number(5001) must match the port of the gRPC server.
+            using var channel = GrpcChannel.ForAddress("https://localhost:5001");
+            var client = new Greeter.GreeterClient(channel);
+            var reply = await client.SayHelloAsync(
+                              new HelloRequest { Name = "GreeterClient" });
+            Console.WriteLine("Greeting: " + reply.Message);
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey();
         }
     }
 }
