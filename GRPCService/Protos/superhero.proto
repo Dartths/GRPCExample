@@ -1,0 +1,30 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GRPCService.Endpoint";
+
+package superhero;
+
+// The greeting service definition.
+service SuperHeroGetter {
+  // Sends a greeting
+  rpc GetAlterEgo (AlterEgoRequest) returns (AlterEgoReply);
+  rpc GetVillain (VillainRequest) returns (VillainReply);
+}
+
+message AlterEgoRequest {
+  string name = 1;
+}
+
+message AlterEgoReply {
+  string name = 1;
+  int32 age = 2;
+  string occupation = 3;
+}
+
+message VillainRequest {
+  string name = 1;
+}
+
+message VillainReply {
+string name = 1;
+}
